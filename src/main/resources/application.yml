@@ -1,0 +1,24 @@
+spring:
+  application:
+    name: pushplus-mcp
+  main:
+    # 必须禁用web应用类型
+    web-application-type: none
+    # 禁用banner
+    banner-mode: off
+  ai:
+    mcp:
+      server:
+        # 启用stdio模式
+        stdio: true
+        # 服务器名称
+        name: pushplus-mcp-server
+        # 服务器版本
+        version: 1.0.0
+
+pushplus:
+  # pushplus发送消息接口地址
+  url: https://www.pushplus.plus/send
+  # 用户token或消息token
+  token:
+
