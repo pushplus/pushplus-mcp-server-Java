@@ -32,3 +32,8 @@ pushplus(推送加)是一个集成了微信、短信、邮件、企业微信、�
 
 其中 -Dpushplus.token= 后面替换为从pushplus官网上获取到的消息token或用户token。
 yourFilePath\\pushplus-mcp-1.0.0.jar 修改为自己本地的文件路径。
+
+## 演示效果
+如图
+
+![效果](images/image.png)
