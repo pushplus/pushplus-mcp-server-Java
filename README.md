@@ -36,4 +36,4 @@ yourFilePath\\pushplus-mcp-1.0.0.jar 修改为自己本地的文件路径。
 ## 演示效果
 如图
 
-![效果](images/image.png)
+![效果](img/demo.png)
