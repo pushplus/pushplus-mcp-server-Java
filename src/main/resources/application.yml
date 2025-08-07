@@ -19,6 +19,6 @@ spring:
 pushplus:
   # pushplus发送消息接口地址
   url: https://www.pushplus.plus/send
-  # 用户token或消息token
-  token:
+  # 用户token或消息token，支持从环境变量PUSHPLUS_TOKEN读取
+  token: ${PUSHPLUS_TOKEN}
 
