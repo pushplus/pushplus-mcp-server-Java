@@ -14,7 +14,7 @@ spring:
         # 服务器名称
         name: pushplus-mcp-server
         # 服务器版本
-        version: 1.0.0
+        version: 1.0.1
 
 pushplus:
   # pushplus发送消息接口地址
