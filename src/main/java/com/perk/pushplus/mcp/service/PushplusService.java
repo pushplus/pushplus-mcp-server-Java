@@ -29,7 +29,7 @@ public class PushplusService {
             "content(具体消息内容，必填，根据不同template支持不同格式)，" +
             "topic(群组编码，可选，不填仅发送给自己，channel为webhook时无效)，" +
             "template(发送模板，可选，默认值：html，支持：html/txt/json/markdown/cloudMonitor/jenkins/route/pay)，" +
-            "channel(发送渠道，可选，默认值：wechat，支持：wechat/webhook/cp/mail/sms/extension)，" +
+            "channel(发送渠道，可选，默认值：wechat，支持：wechat/webhook/cp/mail/sms/voice/extension)，" +
             "webhook(webhook编码，可选)，" +
             "callbackUrl(发送结果回调地址，可选)，" +
             "timestamp(毫秒时间戳，可选，格式如：1632993318000，服务器时间戳大于此时间戳则消息不会发送)，" +
