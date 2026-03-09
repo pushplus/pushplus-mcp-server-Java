@@ -11,6 +11,8 @@ import com.perk.pushplus.mcp.vo.ResultVo;
 
 import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpResponse;
+import cn.hutool.json.JSONArray;
+import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
@@ -29,8 +31,9 @@ public class PushplusService {
             "content(具体消息内容，必填，根据不同template支持不同格式)，" +
             "topic(群组编码，可选，不填仅发送给自己，channel为webhook时无效)，" +
             "template(发送模板，可选，默认值：html，支持：html/txt/json/markdown/cloudMonitor/jenkins/route/pay)，" +
-            "channel(发送渠道，可选，默认值：wechat，支持：wechat/webhook/cp/mail/sms/voice/extension)，" +
+            "channel(发送渠道，可选，默认值：wechat，支持：wechat/webhook/cp/mail/sms/voice/extension/app)，" +
             "webhook(webhook编码，可选)，" +
+            "option(渠道配置参数，可选，原webhook参数，" +
             "callbackUrl(发送结果回调地址，可选)，" +
             "timestamp(毫秒时间戳，可选，格式如：1632993318000，服务器时间戳大于此时间戳则消息不会发送)，" +
             "to(好友令牌，可选，微信公众号渠道填写好友令牌，企业微信渠道填写企业微信用户id，多人用逗号隔开)，" +
@@ -52,6 +55,47 @@ public class PushplusService {
             return msg;
         } else {
             return "请求失败";
+        }
+    }
+
+    @Tool(description = "通过pushplus同时向多个渠道发送推送消息，支持wechat、webhook、cp、mail、sms、voice、extension、app等渠道，多个渠道用逗号隔开；请求成功会返回多个消息流水号，请求失败返回具体原因")
+    public String batchSend(@ToolParam(description = "多渠道发送消息参数;包含以下字段：" +
+            "token(用户token或消息token，可选)，" +
+            "title(消息标题，可选)，" +
+            "content(具体消息内容，必填，根据不同template支持不同格式)，" +
+            "channel(发送渠道，可选，默认值：wechat，多个用逗号隔开，如：\"wechat,webhook,extension\")，" +
+            "option(渠道配置参数，可选，原webhook参数，多个渠道的时候用逗号隔开一一对应发送渠道，如：\",config1,\")，" +
+            "topic(群组编码，可选，不填仅发送给自己，channel为webhook时无效)，" +
+            "template(发送模板，可选，默认值：html，支持：html/txt/json/markdown/cloudMonitor/jenkins/route/pay)，" +
+            "callbackUrl(发送结果回调地址，可选)，" +
+            "timestamp(毫秒时间戳，可选，格式如：1632993318000，服务器时间戳大于此时间戳则消息不会发送)，" +
+            "to(好友令牌，可选，微信公众号渠道填写好友令牌，企业微信渠道填写企业微信用户id，多人用逗号隔开，实名用户最多10人，会员100人)，" +
+            "pre(预处理编码，可选，仅供会员使用)") SendDto sendDto){
+        if(sendDto!=null && !StringUtils.hasText(sendDto.getToken())){
+            sendDto.setToken(pushplusProperties.getToken());
+        }
+
+        HttpResponse response = HttpRequest.post(pushplusProperties.getBatchUrl()).body(JSONUtil.toJsonStr(sendDto)).timeout(5000).execute();
+        String result = response.body();
+
+        JSONObject jsonResult = JSONUtil.parseObj(result);
+        int code = jsonResult.getInt("code", -1);
+        String msg = jsonResult.getStr("msg", "");
+
+        if(code == 200){
+            JSONArray dataArray = jsonResult.getJSONArray("data");
+            StringBuilder sb = new StringBuilder(msg);
+            if(dataArray != null){
+                for(int i = 0; i < dataArray.size(); i++){
+                    JSONObject item = dataArray.getJSONObject(i);
+                    sb.append("\n渠道:").append(item.getStr("channel"))
+                      .append(", 流水号:").append(item.getStr("shortCode"))
+                      .append(", 状态:").append(item.getStr("message"));
+                }
+            }
+            return sb.toString();
+        } else {
+            return "请求失败:" + msg;
         }
     }
 

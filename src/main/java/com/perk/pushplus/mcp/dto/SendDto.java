@@ -23,7 +23,7 @@ public class SendDto implements Serializable {
     @ToolParam(description = "发送模板,默认值：html;发送模板枚举：html(默认模板，支持html文本),txt(纯文本展示，不转义html),json(内容基于json格式展示),markdown(内容基于markdown格式展示),cloudMonitor(阿里云监控报警定制模板),jenkins(jenkins插件定制模板),route(路由器插件定制模板),pay(支付成功通知模板)", required = false)
     private String template;
 
-    @ToolParam(description = "发送渠道,默认值：wechat;发送渠道枚举：wechat(微信公众号),webhook(第三方webhook；企业微信、钉钉、飞书、server酱、IFTTT),cp(企业微信应用),mail(邮箱),sms(短信),voice(语音),extension(浏览器插件)",required = false)
+    @ToolParam(description = "发送渠道,默认值：wechat;发送渠道枚举：wechat(微信公众号),webhook(第三方webhook；企业微信、钉钉、飞书、server酱、IFTTT),cp(企业微信应用),mail(邮箱),sms(短信),voice(语音),extension(插件),app(App)",required = false)
     private String channel;
 
     @ToolParam(description = "webhook编码", required = false)
@@ -40,5 +40,8 @@ public class SendDto implements Serializable {
 
     @ToolParam(description = "预处理编码", required = false)
     private String pre;
+
+    @ToolParam(description = "渠道配置参数(原webhook参数)，多个渠道的时候用逗号隔开，一一对应发送渠道。如：\",config1,\"", required = false)
+    private String option;
 
 }

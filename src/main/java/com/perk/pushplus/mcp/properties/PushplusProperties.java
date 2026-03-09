@@ -9,6 +9,8 @@ public class PushplusProperties {
 
     private String url;
 
+    private String batchUrl;
+
     private String token;
 
 }
