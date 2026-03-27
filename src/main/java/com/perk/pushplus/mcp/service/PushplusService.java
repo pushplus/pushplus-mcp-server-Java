@@ -31,7 +31,7 @@ public class PushplusService {
             "content(具体消息内容，必填，根据不同template支持不同格式)，" +
             "topic(群组编码，可选，不填仅发送给自己，channel为webhook时无效)，" +
             "template(发送模板，可选，默认值：html，支持：html/txt/json/markdown/cloudMonitor/jenkins/route/pay)，" +
-            "channel(发送渠道，可选，默认值：wechat，支持：wechat/webhook/cp/mail/sms/voice/extension/app)，" +
+            "channel(发送渠道，可选，默认值：wechat，支持：wechat/webhook/cp/mail/sms/voice/extension/app/clawbot)，" +
             "webhook(webhook编码，可选)，" +
             "option(渠道配置参数，可选，原webhook参数，" +
             "callbackUrl(发送结果回调地址，可选)，" +
@@ -58,7 +58,7 @@ public class PushplusService {
         }
     }
 
-    @Tool(description = "通过pushplus同时向多个渠道发送推送消息，支持wechat、webhook、cp、mail、sms、voice、extension、app等渠道，多个渠道用逗号隔开；请求成功会返回多个消息流水号，请求失败返回具体原因")
+    @Tool(description = "通过pushplus同时向多个渠道发送推送消息，支持wechat、webhook、cp、mail、sms、voice、extension、app、clawbot等渠道，多个渠道用逗号隔开；请求成功会返回多个消息流水号，请求失败返回具体原因")
     public String batchSend(@ToolParam(description = "多渠道发送消息参数;包含以下字段：" +
             "token(用户token或消息token，可选)，" +
             "title(消息标题，可选)，" +
