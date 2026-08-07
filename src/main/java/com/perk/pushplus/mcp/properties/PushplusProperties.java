@@ -32,11 +32,30 @@ public class PushplusProperties {
      */
     private String secretKey;
 
+    /**
+     * 开放接口 API 前缀（官网文档为 /api）
+     */
+    private String openApiPrefix = "/api";
+
     public String getBaseUrl() {
         if (baseUrl == null || baseUrl.isBlank()) {
             return "https://www.pushplus.plus";
         }
         return baseUrl.replaceAll("/+$", "");
+    }
+
+    /**
+     * 开放接口根地址，如 https://www.pushplus.plus/api
+     */
+    public String getOpenApiBaseUrl() {
+        String prefix = openApiPrefix == null ? "/api" : openApiPrefix.trim();
+        if (prefix.isEmpty()) {
+            return getBaseUrl();
+        }
+        if (!prefix.startsWith("/")) {
+            prefix = "/" + prefix;
+        }
+        return getBaseUrl() + prefix.replaceAll("/+$", "");
     }
 
     public String getUrl() {

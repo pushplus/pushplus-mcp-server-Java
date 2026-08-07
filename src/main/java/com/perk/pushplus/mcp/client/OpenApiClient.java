@@ -17,7 +17,6 @@ import java.util.concurrent.locks.ReentrantLock;
 public class OpenApiClient {
 
     private static final int DEFAULT_TIMEOUT_MS = 15000;
-    private static final long REFRESH_AHEAD_MS = 60_000L;
 
     private final PushplusProperties properties;
     private final ReentrantLock lock = new ReentrantLock();
@@ -50,7 +49,7 @@ public class OpenApiClient {
     }
 
     private String refreshAccessKey() {
-        String url = properties.getBaseUrl() + "/common/openApi/getAccessKey";
+        String url = properties.getOpenApiBaseUrl() + "/common/openApi/getAccessKey";
         JSONObject body = new JSONObject();
         body.set("token", properties.getToken());
         body.set("secretKey", properties.getSecretKey());
@@ -61,10 +60,13 @@ public class OpenApiClient {
                 .timeout(DEFAULT_TIMEOUT_MS)
                 .execute();
 
-        JSONObject result = JSONUtil.parseObj(response.body());
+        String responseBody = response.body();
+        ensureJsonResponse(responseBody, url);
+
+        JSONObject result = JSONUtil.parseObj(responseBody);
         if (result.getInt("code", -1) != 200) {
             throw new IllegalStateException("获取 access-key 失败: " + result.getStr("msg", "未知错误")
-                    + "（请确认已开启开放接口，且出口 IP 在白名单内）");
+                    + "（请确认 PUSHPLUS_TOKEN 为用户token、已开启开放接口，且出口 IP 在白名单内）");
         }
         JSONObject data = result.getJSONObject("data");
         if (data == null || !StringUtils.hasText(data.getStr("accessKey"))) {
@@ -97,6 +99,7 @@ public class OpenApiClient {
 
         HttpResponse response = request.execute();
         String responseBody = response.body();
+        ensureJsonResponse(responseBody, url);
 
         if (isUnauthorized(response.getStatus(), responseBody) && !retried) {
             getAccessKey(true);
@@ -130,26 +133,31 @@ public class OpenApiClient {
         String key = getAccessKey(false);
         byte[] bytes = java.util.Base64.getDecoder().decode(contentBase64.getBytes(StandardCharsets.UTF_8));
         File temp = null;
+        String uploadUrl = properties.getOpenApiBaseUrl() + "/open/file/uploadImage";
         try {
             temp = File.createTempFile("pushplus-upload-", "-" + sanitizeFilename(filename));
             java.nio.file.Files.write(temp.toPath(), bytes);
 
-            HttpResponse response = HttpRequest.post(properties.getBaseUrl() + "/open/file/uploadImage")
+            HttpResponse response = HttpRequest.post(uploadUrl)
                     .header("access-key", key)
                     .form("file", temp)
                     .timeout(30000)
                     .execute();
             String responseBody = response.body();
+            ensureJsonResponse(responseBody, uploadUrl);
             if (isUnauthorized(response.getStatus(), responseBody)) {
                 getAccessKey(true);
-                response = HttpRequest.post(properties.getBaseUrl() + "/open/file/uploadImage")
+                response = HttpRequest.post(uploadUrl)
                         .header("access-key", getAccessKey(false))
                         .form("file", temp)
                         .timeout(30000)
                         .execute();
                 responseBody = response.body();
+                ensureJsonResponse(responseBody, uploadUrl);
             }
             return responseBody;
+        } catch (IllegalStateException e) {
+            throw e;
         } catch (Exception e) {
             throw new IllegalStateException("上传图片失败: " + e.getMessage(), e);
         } finally {
@@ -174,6 +182,22 @@ public class OpenApiClient {
         }
     }
 
+    /**
+     * 开放接口必须返回 JSON。若误请求到官网前端（缺 /api 前缀），会返回 HTML，
+     * Hutool 解析时可能抛出 Mismatched link and head。
+     */
+    private void ensureJsonResponse(String responseBody, String url) {
+        if (!StringUtils.hasText(responseBody)) {
+            throw new IllegalStateException("Open API 响应为空: " + url);
+        }
+        String trimmed = responseBody.trim();
+        if (trimmed.startsWith("<") || trimmed.toLowerCase().startsWith("<!doctype")) {
+            throw new IllegalStateException(
+                    "Open API 返回了 HTML 而非 JSON，请确认开放接口地址使用 /api 前缀。请求URL: " + url
+                            + "；当前 openApiBaseUrl=" + properties.getOpenApiBaseUrl());
+        }
+    }
+
     private boolean isUnauthorized(int status, String body) {
         if (status == 401) {
             return true;
@@ -186,8 +210,10 @@ public class OpenApiClient {
             Integer code = json.getInt("code");
             String msg = json.getStr("msg", "");
             return (code != null && code == 401)
+                    || code != null && code == 302
                     || msg.toLowerCase().contains("unauthorized")
                     || msg.contains("未授权")
+                    || msg.contains("未登录")
                     || msg.contains("access-key")
                     || msg.contains("令牌无效");
         } catch (Exception ignored) {
@@ -197,7 +223,7 @@ public class OpenApiClient {
 
     private String buildUrl(String path, Map<String, Object> query) {
         String normalized = path.startsWith("/") ? path : "/" + path;
-        StringBuilder sb = new StringBuilder(properties.getBaseUrl()).append(normalized);
+        StringBuilder sb = new StringBuilder(properties.getOpenApiBaseUrl()).append(normalized);
         if (query != null && !query.isEmpty()) {
             boolean first = true;
             for (Map.Entry<String, Object> entry : query.entrySet()) {

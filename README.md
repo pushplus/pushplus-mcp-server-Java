@@ -15,9 +15,11 @@ pushplus(推送加)是一个集成了微信、短信、邮件、企业微信、�
 | `PUSHPLUS_TOKEN` | 用户 token（发送与开放接口共用，必需） |
 | `PUSHPLUS_SECRET_KEY` | 开放接口 secretKey（调用 open_* 时需要） |
 | `PUSHPLUS_BASE_URL` | API 根地址，默认 `https://www.pushplus.plus` |
+| `PUSHPLUS_OPEN_API_PREFIX` | 开放接口前缀，默认 `/api`（发送接口不走此前缀） |
 
 说明：
 - `PUSHPLUS_TOKEN` 同时用于消息发送和 `getAccessKey` 换取 access-key（须为**用户 token**，不支持消息 token）
+- 开放接口实际地址形如 `https://www.pushplus.plus/api/open/...`；发送接口仍为 `https://www.pushplus.plus/send`
 - 使用开放接口前请在官网开启开放接口，并配置 `secretKey` 与安全 IP
 - 各 `open*` 工具的请求/响应字段说明对齐官方文档：https://www.pushplus.plus/doc/guide/openApi.html
 

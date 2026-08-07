@@ -21,6 +21,8 @@ pushplus:
   # 可由 base-url 推导；保留显式覆盖能力
   url: ${PUSHPLUS_SEND_URL:}
   batch-url: ${PUSHPLUS_BATCH_URL:}
+  # 开放接口路径前缀（官方文档为 /api，发送接口 /send 不走此前缀）
+  open-api-prefix: ${PUSHPLUS_OPEN_API_PREFIX:/api}
   # 用户 token（发送与开放接口共用）
   token: ${PUSHPLUS_TOKEN:}
   # 开放接口 secretKey
