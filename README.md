@@ -2,18 +2,58 @@
 官网：https://www.pushplus.plus
 
 ## 功能描述
-pushplus(推送加)是一个集成了微信、短信、邮件、企业微信、腾讯轻联、钉钉、飞书、bark、gotify、集简云等实时消息推送平台。只需要调用简单的API，即可帮您迅速完成消息的推送，使用简单方便。
+pushplus(推送加)是一个集成了微信、短信、邮件、企业微信、腾讯轻联、钉钉、飞书、bark、gotify、集简云等实时消息推送平台。
+
+本项目基于 Spring AI MCP，通过 stdio 为 AI 大模型提供：
+1. 消息发送（`/send`、`/batchSend`）
+2. 全量开放接口（`/open/**`，约 65 个工具）
+
+## 环境变量
+
+| 变量 | 说明 |
+|------|------|
+| `PUSHPLUS_TOKEN` | 用户 token（发送与开放接口共用，必需） |
+| `PUSHPLUS_SECRET_KEY` | 开放接口 secretKey（调用 open_* 时需要） |
+| `PUSHPLUS_BASE_URL` | API 根地址，默认 `https://www.pushplus.plus` |
+
+说明：
+- `PUSHPLUS_TOKEN` 同时用于消息发送和 `getAccessKey` 换取 access-key（须为**用户 token**，不支持消息 token）
+- 使用开放接口前请在官网开启开放接口，并配置 `secretKey` 与安全 IP
+- 各 `open*` 工具的请求/响应字段说明对齐官方文档：https://www.pushplus.plus/doc/guide/openApi.html
+
+## MCP 工具
+
+### 发送
+| 工具 | 对应接口 |
+|------|----------|
+| `send` | `POST /send` |
+| `batchSend` | `POST /batchSend` |
+
+### 开放接口（命名：`openXxx`）
+覆盖模块：auth / user / message / token / topic / topicUser / friend / webhook / setting / pre / mail / mp / cp / clawBot / file / userImage / pay。
+
+常用示例：
+- `openGetAccessKey`：换取 access-key（排查用）
+- `openUserMyInfo`：个人资料
+- `openMessageSendResult`：按 shortCode 查发送结果
+- `openWebhookList` / `openTopicList`：配置查询
+
+破坏性操作（删除/提现/解绑等）已在 description 中标注「高风险」。
 
 ## 使用方式
-1. 依赖JDK21
-2. 使用maven工具来构建项目，构建命令：mvn clean package
-3. 在 target 目录中启动程序，命令：`PUSHPLUS_TOKEN=你的token java -Dlogging.pattern.console= -jar pushplus-mcp-1.0.2.jar`
-4. 启动命令中可通过环境变量指定token，用来固定发送消息的token，否则需要在提示词中指定
+1. 依赖 JDK 21
+2. 构建：`mvn clean package`
+3. 启动：
 
-## Cursor中使用
-在Cursor Settings中找到Tool & Integrations, 点击New MCP Server，填入以下配置：
-
+```bash
+PUSHPLUS_TOKEN=你的token \
+PUSHPLUS_SECRET_KEY=你的secretKey \
+java -Dlogging.pattern.console= -jar pushplus-mcp-1.0.5.jar
 ```
+
+## Cursor 中使用
+
+```json
 {
   "mcpServers": {
     "pushplus-mcp-server": {
@@ -21,21 +61,13 @@ pushplus(推送加)是一个集成了微信、短信、邮件、企业微信、�
       "args": [
         "-Dlogging.pattern.console=",
         "-jar",
-        "yourFilePath\\pushplus-mcp-1.0.2.jar"
+        "/path/to/pushplus-mcp-1.0.5.jar"
       ],
       "env": {
-        "PUSHPLUS_TOKEN": "替换为自己的消息token"
+        "PUSHPLUS_TOKEN": "替换为自己的token",
+        "PUSHPLUS_SECRET_KEY": "替换为secretKey"
       }
     }
   }
 }
 ```
-
-说明：
-- `PUSHPLUS_TOKEN` 替换为从pushplus官网上获取到的消息token或用户token
-- `yourFilePath\\pushplus-mcp-1.0.2.jar` 修改为自己本地的文件路径
-
-## 演示效果
-如图
-
-![效果](img/demo.png)

@@ -14,13 +14,14 @@ spring:
         # 服务器名称
         name: pushplus-mcp-server
         # 服务器版本
-        version: 1.0.2
+        version: 1.0.5
 
 pushplus:
-  # pushplus发送消息接口地址
-  url: https://www.pushplus.plus/send
-  # pushplus多渠道发送消息接口地址
-  batch-url: https://www.pushplus.plus/batchSend
-  # 用户token或消息token，支持从环境变量PUSHPLUS_TOKEN读取
-  token: ${PUSHPLUS_TOKEN}
-
+  base-url: ${PUSHPLUS_BASE_URL:https://www.pushplus.plus}
+  # 可由 base-url 推导；保留显式覆盖能力
+  url: ${PUSHPLUS_SEND_URL:}
+  batch-url: ${PUSHPLUS_BATCH_URL:}
+  # 用户 token（发送与开放接口共用）
+  token: ${PUSHPLUS_TOKEN:}
+  # 开放接口 secretKey
+  secret-key: ${PUSHPLUS_SECRET_KEY:}
