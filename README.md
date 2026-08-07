@@ -1,8 +1,8 @@
-# pushplus 推送加 MCP Server
+# pushplus mcp server
 官网：https://www.pushplus.plus
 
 ## 功能描述
-pushplus(推送加)是一个集成了微信、短信、邮件、企业微信、腾讯轻联、钉钉、飞书、bark、gotify、集简云等实时消息推送平台。
+pushplus是一个集成了微信、短信、邮件、企业微信、腾讯轻联、钉钉、飞书、bark、gotify、集简云等实时消息推送平台。
 
 本项目基于 Spring AI MCP，通过 stdio 为 AI 大模型提供：
 1. 消息发送（`/send`、`/batchSend`）
