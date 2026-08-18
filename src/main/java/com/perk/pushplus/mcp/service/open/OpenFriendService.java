@@ -54,4 +54,31 @@ public class OpenFriendService extends OpenToolSupport {
         body.set("remark", remark);
         return run(() -> openApiClient.post("/open/friend/editRemark", body));
     }
+
+    @Tool(description = "POST /open/friend/addBlacklist - 高风险：将好友加入黑名单。"
+            + "加入后解除双方好友关系，对方无法再添加你。不能将自己加入黑名单，仅可将已有好友加入。"
+            + "url参数friendId为好友列表friendId字段。" + OpenApiDocs.RESULT)
+    public String openFriendAddBlacklist(
+            @ToolParam(description = "好友id（列表friendId字段）") Long friendId) {
+        return run(() -> openApiClient.post("/open/friend/addBlacklist",
+                query("friendId", friendId), null));
+    }
+
+    @Tool(description = "POST /open/friend/blacklistList - 好友黑名单列表。"
+            + OpenApiDocs.PAGE_REQ + OpenApiDocs.RESULT + OpenApiDocs.PAGE_RESP
+            + "list项: id(黑名单记录ID,解除时使用),friendId,nickName,headImgUrl,createTime。")
+    public String openFriendBlacklistList(
+            @ToolParam(description = "当前所在分页数，默认1", required = false) Integer current,
+            @ToolParam(description = "每页大小，默认20，最大50", required = false) Integer pageSize) {
+        return run(() -> openApiClient.post("/open/friend/blacklistList", pageBody(current, pageSize, null)));
+    }
+
+    @Tool(description = "POST /open/friend/removeBlacklist - 高风险：解除好友黑名单。"
+            + "解除后不会自动恢复好友关系，需重新扫码添加。url参数id为黑名单列表id字段。"
+            + OpenApiDocs.RESULT)
+    public String openFriendRemoveBlacklist(
+            @ToolParam(description = "黑名单记录ID（列表id字段）") Long id) {
+        return run(() -> openApiClient.post("/open/friend/removeBlacklist",
+                query("id", id), null));
+    }
 }
