@@ -14,7 +14,7 @@ spring:
         # 服务器名称
         name: pushplus-mcp-server
         # 服务器版本
-        version: 1.0.5
+        version: 1.0.6
 
 pushplus:
   base-url: ${PUSHPLUS_BASE_URL:https://www.pushplus.plus}

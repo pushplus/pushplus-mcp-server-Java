@@ -50,7 +50,7 @@ pushplus是一个集成了微信、短信、邮件、企业微信、腾讯轻联
 ```bash
 PUSHPLUS_TOKEN=你的token \
 PUSHPLUS_SECRET_KEY=你的secretKey \
-java -Dlogging.pattern.console= -jar pushplus-mcp-1.0.5.jar
+java -Dlogging.pattern.console= -jar pushplus-mcp-1.0.6.jar
 ```
 
 ## Cursor 中使用
@@ -63,7 +63,7 @@ java -Dlogging.pattern.console= -jar pushplus-mcp-1.0.5.jar
       "args": [
         "-Dlogging.pattern.console=",
         "-jar",
-        "/path/to/pushplus-mcp-1.0.5.jar"
+        "/path/to/pushplus-mcp-1.0.6.jar"
       ],
       "env": {
         "PUSHPLUS_TOKEN": "替换为自己的token",
