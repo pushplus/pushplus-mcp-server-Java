@@ -24,7 +24,7 @@ public class PushplusService {
     private static final String TEMPLATE_ENUM =
             "html/txt/json/markdown/cloudMonitor/jenkins/route/pay/order/verify/form/doc/excel/webdiff";
     private static final String CHANNEL_ENUM =
-            "wechat/webhook/cp/mail/sms/voice/extension/app/clawbot";
+            "wechat/webhook/cp/mail/sms/voice/extension/app/clawbot/qq";
     private static final int SEND_TIMEOUT_MS = 10000;
     private static final int BATCH_SEND_TIMEOUT_MS = 15000;
 
@@ -42,7 +42,7 @@ public class PushplusService {
             "template(发送模板，可选，默认html，支持：" + TEMPLATE_ENUM + ")，" +
             "channel(发送渠道，可选，默认wechat，支持：" + CHANNEL_ENUM + ")，" +
             "webhook(webhook编码，可选，非URL)，" +
-            "option(渠道配置参数，可选，与webhook等价)，" +
+            "option(渠道配置参数，可选，与webhook等价；qq渠道不填发给自己，填群配置编码发到对应QQ群)，" +
             "callbackUrl(发送结果回调地址，可选)，" +
             "timestamp(毫秒时间戳字符串，可选)，" +
             "to(好友令牌/企微用户id，可选，多人逗号分隔)，" +
@@ -83,7 +83,7 @@ public class PushplusService {
             "title(消息标题，可选)，" +
             "content(消息内容，必填)，" +
             "icon(消息图标，可选)，" +
-            "channel(发送渠道，可选，默认wechat，多个用逗号隔开，如：\"wechat,mail,webhook\"，最多5个)，" +
+            "channel(发送渠道，可选，默认wechat，多个用逗号隔开，如：\"wechat,mail,qq\"，最多5个，支持：" + CHANNEL_ENUM + ")，" +
             "option(渠道配置参数，可选，多个用逗号隔开与channel一一对应，如：\",config1,\")，" +
             "topic(群组编码，可选)，" +
             "template(发送模板，可选，默认html，支持：" + TEMPLATE_ENUM + ")，" +

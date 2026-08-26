@@ -1,7 +1,7 @@
 package com.perk.pushplus.mcp.service.open;
 
 /**
- * 开放接口文档字段说明常量（对齐 https://www.pushplus.plus/doc/guide/openApi.html V1.15）
+ * 开放接口文档字段说明常量（对齐 https://www.pushplus.plus/doc/guide/openApi.html V1.17）
  */
 final class OpenApiDocs {
 
@@ -14,7 +14,7 @@ final class OpenApiDocs {
     static final String WEBHOOK_TYPE =
             "webhookType:1企业微信机器人,2钉钉,3飞书,4Server酱,50bark,6企业微信应用,7腾讯轻联,8IFTTT,9集简云,10Gotify,11WxPusher,12自定义";
     static final String CHANNEL =
-            "channel: wechat/cp/webhook/mail/sms/voice/extension";
+            "channel: wechat/cp/webhook/mail/sms/voice/extension/qq";
     static final String TOPIC_TYPE =
             "topicType:0普通群组;1积分群组;2公开群组";
 

@@ -2,11 +2,11 @@
 官网：https://www.pushplus.plus
 
 ## 功能描述
-pushplus是一个集成了微信、短信、邮件、企业微信、腾讯轻联、钉钉、飞书、bark、gotify、集简云等实时消息推送平台。
+pushplus是一个集成了微信、QQ机器人、短信、邮件、企业微信、腾讯轻联、钉钉、飞书、bark、gotify、集简云等实时消息推送平台。
 
 本项目基于 Spring AI MCP，通过 stdio 为 AI 大模型提供：
 1. 消息发送（`/send`、`/batchSend`）
-2. 全量开放接口（`/open/**`，约 71 个工具）
+2. 全量开放接口（`/open/**`，约 79 个工具）
 
 ## 环境变量
 
@@ -32,13 +32,14 @@ pushplus是一个集成了微信、短信、邮件、企业微信、腾讯轻联
 | `batchSend` | `POST /batchSend` |
 
 ### 开放接口（命名：`openXxx`）
-覆盖模块：auth / user / message / token / topic / topicUser / friend / webhook / setting / pre / mail / mp / cp / clawBot / file / userImage / pay。
+覆盖模块：auth / user / message / token / topic / topicUser / friend / webhook / setting / pre / mail / mp / cp / clawBot / qqBot / file / userImage / pay。
 
 常用示例：
 - `openGetAccessKey`：换取 access-key（排查用）
 - `openUserMyInfo`：个人资料
 - `openMessageSendResult`：按 shortCode 查发送结果
 - `openWebhookList` / `openTopicList`：配置查询
+- `openQqBotGetBindLink` / `openQqBotInfo` / `openQqBotGroupList` / `openQqBotAdd`：QQ 机器人绑定与群配置
 
 破坏性操作（删除/提现/解绑等）已在 description 中标注「高风险」。
 
@@ -50,7 +51,7 @@ pushplus是一个集成了微信、短信、邮件、企业微信、腾讯轻联
 ```bash
 PUSHPLUS_TOKEN=你的token \
 PUSHPLUS_SECRET_KEY=你的secretKey \
-java -Dlogging.pattern.console= -jar pushplus-mcp-1.0.6.jar
+java -Dlogging.pattern.console= -jar pushplus-mcp-1.0.7.jar
 ```
 
 ## Cursor 中使用
@@ -63,7 +64,7 @@ java -Dlogging.pattern.console= -jar pushplus-mcp-1.0.6.jar
       "args": [
         "-Dlogging.pattern.console=",
         "-jar",
-        "/path/to/pushplus-mcp-1.0.6.jar"
+        "/path/to/pushplus-mcp-1.0.7.jar"
       ],
       "env": {
         "PUSHPLUS_TOKEN": "替换为自己的token",

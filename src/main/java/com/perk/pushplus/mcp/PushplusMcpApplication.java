@@ -9,6 +9,7 @@ import com.perk.pushplus.mcp.service.open.OpenFriendService;
 import com.perk.pushplus.mcp.service.open.OpenMessageService;
 import com.perk.pushplus.mcp.service.open.OpenPayService;
 import com.perk.pushplus.mcp.service.open.OpenPreService;
+import com.perk.pushplus.mcp.service.open.OpenQqBotService;
 import com.perk.pushplus.mcp.service.open.OpenSettingService;
 import com.perk.pushplus.mcp.service.open.OpenTokenService;
 import com.perk.pushplus.mcp.service.open.OpenTopicService;
@@ -45,6 +46,7 @@ public class PushplusMcpApplication {
             OpenPreService openPreService,
             OpenChannelService openChannelService,
             OpenClawBotService openClawBotService,
+            OpenQqBotService openQqBotService,
             OpenFileService openFileService,
             OpenPayService openPayService) {
         return MethodToolCallbackProvider.builder()
@@ -62,6 +64,7 @@ public class PushplusMcpApplication {
                         openPreService,
                         openChannelService,
                         openClawBotService,
+                        openQqBotService,
                         openFileService,
                         openPayService
                 )
